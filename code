@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int length = nums.size();
+        for ( int i = 0 ;i<length;i++)
+         {
+            nums[i] = pow(nums[i],2);
+        }
+        radixSort(nums);
+        return nums;
+    }
+    void radixSort(vector<int> &nums)
+    {
+        int max = *max_element(nums.begin(),nums.end());
+        int place = 1;
+        
+        while((max/place) > 0)
+        {
+            countingSort(nums,place);
+            place = place*10;
+        }
+    }
+    void countingSort(vector<int> &nums, int place)
+    {
+        vector<int> count(10);
+        vector<int> output(nums.size());
+        
+        for (int x = 0; x < nums.size(); x++)
+        {
+            count[(nums[x]/place) % 10]++;
+        }
+        for (int x = 1; x < count.size(); x++)
+        {
+            count[x] = count[x - 1] + count[x];
+        }
+        for (int x = nums.size() - 1; x >= 0; x--)
+        {
+            int index = count[(nums[x]/place) % 10] - 1;
+            count[(nums[x]/place) % 10]--;
+            output[index] = nums[x];
+        }
+        for (int x = 0; x < output.size(); x++)
+        {
+            nums[x] = output[x];
+        }
+    }
